@@ -24,14 +24,14 @@ public class UserRepository implements CrudRepository<User>{
         DbConnection conn = new DbConnection("jdbc:postgresql://localhost:5432/db_project", "baddie",
                 "g0yi8o1s");
         PreparedStatement statement = conn.getConn().prepareStatement("INSERT INTO user_table VALUES " +
-                "(DEFAULT, ?, ?, ?, ?, ?, NULL)");
+                "(DEFAULT, ?, ?, ?, ?, ?, ?)");
         statement.setString(1,model.getFirstName());
         statement.setString(2, model.getLastName());
         statement.setString(3, model.getEmail());
         statement.setString(4, model.getPassword());
         statement.setString(5, model.getProfilePic());
+        statement.setString(6,model.getRegDate());
         statement.executeUpdate();
-
     }
 
     @Override
@@ -50,7 +50,7 @@ public class UserRepository implements CrudRepository<User>{
                     rs.getString("email"),
                     rs.getString("password"),
                     rs.getString("profile_pic"),
-                    null);
+                    rs.getString("reg_date"));
         }
         else return null;
     }
@@ -70,7 +70,7 @@ public class UserRepository implements CrudRepository<User>{
                     rs.getString("email"),
                     rs.getString("password"),
                     rs.getString("profile_pic"),
-                    null);
+                    rs.getString("reg_date"));
         }
         else return null;
     }
@@ -92,7 +92,7 @@ public class UserRepository implements CrudRepository<User>{
                     rs.getString("email"),
                     rs.getString("password"),
                     rs.getString("profile_pic"),
-                    null);
+                    rs.getString("reg_date"));
         }
         else return null;
     }
@@ -146,7 +146,6 @@ public class UserRepository implements CrudRepository<User>{
             statement.setInt(2, model.getId());
             statement.executeUpdate();
         }
-
         if (!model.getPassword().equals("")){
             PreparedStatement statement = conn.getConn().prepareStatement("UPDATE user_table SET password = ? WHERE id = ?");
             statement.setString(1, model.getPassword());

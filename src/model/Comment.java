@@ -5,13 +5,13 @@ import java.util.Date;
 public class Comment {
     int id;
     String commentText;
-    Date commentDate;
+    String commentDate;
     int upvotes;
     int downvotes;
     User user;
     Post post;
 
-    public Comment(int id, String commentText, Date commentDate, int upvotes, int downvotes, User user, Post post) {
+    public Comment(int id, String commentText, String commentDate, int upvotes, int downvotes, User user, Post post) {
         this.id = id;
         this.commentText = commentText;
         this.commentDate = commentDate;
@@ -37,13 +37,6 @@ public class Comment {
         this.commentText = commentText;
     }
 
-    public Date getCommentDate() {
-        return commentDate;
-    }
-
-    public void setCommentDate(Date commentDate) {
-        this.commentDate = commentDate;
-    }
 
     public int getUpvotes() {
         return upvotes;
@@ -75,5 +68,13 @@ public class Comment {
 
     public void setPost(Post post) {
         this.post = post;
+    }
+
+    public String getCommentDate() {
+        return commentDate;
+    }
+
+    public void setCommentDate(String commentDate) {
+        this.commentDate = commentDate;
     }
 }

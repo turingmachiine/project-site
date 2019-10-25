@@ -17,7 +17,33 @@ public class LocationRepository implements CrudRepository<Location> {
     }
 
     @Override
-    public void create(Location model) {
+    public void create(Location model) throws ClassNotFoundException, SQLException {
+        Class.forName("org.postgresql.Driver");
+        DbConnection conn = new DbConnection("jdbc:postgresql://localhost:5432/db_project", "baddie",
+                "g0yi8o1s");
+        PreparedStatement statement = conn.getConn().prepareStatement("INSERT INTO location_table VALUES (DEFAULT, ?, ?, ?)");
+        statement.setFloat(1, model.getLatitude());
+        statement.setFloat(2, model.getLongitude());
+        statement.setString(3, model.getCity());
+        statement.executeUpdate();
+    }
+
+    public Location findByCoordinats(float latitude, float longitude) throws SQLException, ClassNotFoundException {
+        Class.forName("org.postgresql.Driver");
+        DbConnection conn = new DbConnection("jdbc:postgresql://localhost:5432/db_project", "baddie",
+                "g0yi8o1s");
+        PreparedStatement statement = conn.getConn().prepareStatement("SELECT * FROM location_table where latitude = ? AND longitude = ?");
+        statement.setFloat(1,latitude);
+        statement.setFloat(2, longitude);
+        ResultSet rs = statement.executeQuery();
+        if (rs.next()) {
+            return new Location(
+                    rs.getInt("id"),
+                    rs.getFloat("latitude"),
+                    rs.getFloat("longitude"),
+                    rs.getString("city"));
+        }
+        else return null;
 
     }
 

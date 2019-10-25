@@ -6,7 +6,7 @@ public class House {
     int id;
     String name;
     User creator;
-    Date creationDate;
+    String creationDate;
     HouseClass houseClass;
     String description;
     Location location;
@@ -23,10 +23,6 @@ public class House {
         this.creator = creator;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
     public void setHouseClass(HouseClass houseClass) {
         this.houseClass = houseClass;
     }
@@ -39,15 +35,6 @@ public class House {
         this.location = location;
     }
 
-    public House(int id, String name, User creator, Date creationDate, HouseClass houseClass, String description, Location location) {
-        this.id = id;
-        this.name = name;
-        this.creator = creator;
-        this.creationDate = creationDate;
-        this.houseClass = houseClass;
-        this.description = description;
-        this.location = location;
-    }
 
     public int getId() {
         return id;
@@ -61,9 +48,6 @@ public class House {
         return creator;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
-    }
 
     public HouseClass getHouseClass() {
         return houseClass;
@@ -75,5 +59,34 @@ public class House {
 
     public Location getLocation() {
         return location;
+    }
+
+    @Override
+    public String toString() {
+        return "House{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", creator=" + creator.toString() +
+                ", creationDate=" + creationDate +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
+    public House(int id, String name, User creator, String creationDate, HouseClass houseClass, String description, Location location) {
+        this.id = id;
+        this.name = name;
+        this.creator = creator;
+        this.creationDate = creationDate;
+        this.houseClass = houseClass;
+        this.description = description;
+        this.location = location;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
     }
 }

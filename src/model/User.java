@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class User {
     int id;
@@ -9,7 +10,20 @@ public class User {
     String email;
     String password;
     String profilePic;
-    Date regDate;
+    String regDate;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
     public int getId() {
         return id;
@@ -59,15 +73,15 @@ public class User {
         this.profilePic = profilePic;
     }
 
-    public Date getRegDate() {
+    public String getRegDate() {
         return regDate;
     }
 
-    public void setRegDate(Date regDate) {
+    public void setRegDate(String regDate) {
         this.regDate = regDate;
     }
 
-    public User(int id, String firstName, String lastName, String email, String password, String profilePic, Date regDate) {
+    public User(int id, String firstName, String lastName, String email, String password, String profilePic, String regDate) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -76,7 +90,6 @@ public class User {
         this.profilePic = profilePic;
         this.regDate = regDate;
     }
-
     @Override
     public String toString() {
         return id +

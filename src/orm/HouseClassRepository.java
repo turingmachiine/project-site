@@ -21,6 +21,19 @@ public class HouseClassRepository implements CrudRepository<HouseClass> {
 
     }
 
+    public HouseClass findByName(String name) throws SQLException, ClassNotFoundException {
+        Class.forName("org.postgresql.Driver");
+        DbConnection conn = new DbConnection("jdbc:postgresql://localhost:5432/db_project", "baddie",
+                "g0yi8o1s");
+        PreparedStatement statement = conn.getConn().prepareStatement("SELECT * FROM house_class where class = ?");
+        statement.setString(1,name);
+        ResultSet rs = statement.executeQuery();
+        if (rs.next()) {
+            return new HouseClass(rs.getInt("id"), rs.getString("class"));
+        }
+        else return null;
+    }
+
     @Override
     public HouseClass findByID(int id) throws SQLException, ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
