@@ -88,10 +88,7 @@ public class RegistrationServlet extends HttpServlet {
                 File uploads = new File("/home/baddie/IdeaProjects/project-site/out/artifacts/project_site_war_exploded/resources/images");
                 File file = File.createTempFile("img", "." + filenames[1], uploads);
                 Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                System.out.println(file.toPath());
-                System.out.println(file.getPath());
                 String need_path = "/resources/images/" + file.getPath().split("/")[10];
-                System.out.println(need_path);
                 try {
                     new UserRepository().create(new User(
                             0,

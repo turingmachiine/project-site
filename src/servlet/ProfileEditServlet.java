@@ -35,10 +35,7 @@ public class ProfileEditServlet extends HttpServlet {
             FreeMarkerConfigurator.getInstance(this);
             Map<String, Object> root = new HashMap<>();
             root.put("context", req.getContextPath());
-            root.put("firstname", usr.getFirstName());
-            root.put("lastname", usr.getLastName());
-            root.put("email", usr.getEmail());
-            root.put("user_pic", usr.getProfilePic());
+            root.put("user", usr);
             Render.render(req, resp, "edit.ftl", root);
         } else {
             resp.sendRedirect("/login");
@@ -71,12 +68,10 @@ public class ProfileEditServlet extends HttpServlet {
             } else {
                 String[] filenames = fileName.split("\\.");
                 InputStream fileContent = filePart.getInputStream();
-                File uploads = new File("/home/baddie/IdeaProjects/project-site/web/assets/images");
+                File uploads = new File("/home/baddie/IdeaProjects/project-site/out/artifacts/project_site_war_exploded/resources/images");
                 File file = File.createTempFile("img", "." + filenames[1], uploads);
                 Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                String need_path = "/" + file.getPath().split("/")[6] + "/" + file.getPath().split("/")[7] +
-                        "/" + file.getPath().split("/")[8];
-                System.out.println(need_path);
+                String need_path = "/resources/images/" + file.getPath().split("/")[10];
                 try {
                     new UserRepository().update(new User(
                             usr.getId(),

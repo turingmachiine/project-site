@@ -66,14 +66,10 @@ public class PostCreationServlet extends HttpServlet {
                 } else {
                     String[] filenames = fileName.split("\\.");
                     InputStream fileContent = filePart.getInputStream();
-                    File uploads = new File("/home/baddie/IdeaProjects/project-site/web/assets/images/posts");
+                    File uploads = new File("/home/baddie/IdeaProjects/project-site/out/artifacts/project_site_war_exploded/resources/images");
                     File file = File.createTempFile("img", "." + filenames[1], uploads);
                     Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    System.out.println(file.toPath());
-                    System.out.println(file.getPath());
-                    String need_path = "/" + file.getPath().split("/")[6] + "/" + file.getPath().split("/")[7] +
-                            "/" + file.getPath().split("/")[8];
-
+                    String need_path = "/resources/images/" + file.getPath().split("/")[10];
                     DateFormat format = new SimpleDateFormat("dd/mm/yyyy");
                     String date = format.format(new Date(System.currentTimeMillis()));
                     new PostRepository().create(new Post(
