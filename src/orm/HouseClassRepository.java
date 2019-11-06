@@ -29,9 +29,13 @@ public class HouseClassRepository implements CrudRepository<HouseClass> {
         statement.setString(1,name);
         ResultSet rs = statement.executeQuery();
         if (rs.next()) {
+            conn.close();
             return new HouseClass(rs.getInt("id"), rs.getString("class"));
         }
-        else return null;
+        else {
+            conn.close();
+            return null;
+        }
     }
 
     @Override
@@ -43,9 +47,13 @@ public class HouseClassRepository implements CrudRepository<HouseClass> {
         statement.setInt(1,id);
         ResultSet rs = statement.executeQuery();
         if (rs.next()) {
+            conn.close();
             return new HouseClass(rs.getInt("id"), rs.getString("class"));
         }
-        else return null;
+        else {
+            conn.close();
+            return null;
+        }
     }
 
     @Override
@@ -64,6 +72,7 @@ public class HouseClassRepository implements CrudRepository<HouseClass> {
         while(rs.next()) {
             result.add(new HouseClass(rs.getInt("id"), rs.getString("class")));
         }
+        conn.close();
         return result;
 
     }

@@ -32,6 +32,7 @@ public class UserRepository implements CrudRepository<User>{
         statement.setString(5, model.getProfilePic());
         statement.setString(6,model.getRegDate());
         statement.executeUpdate();
+        conn.close();
     }
 
     @Override
@@ -43,6 +44,7 @@ public class UserRepository implements CrudRepository<User>{
         statement.setInt(1,id);
         ResultSet rs = statement.executeQuery();
         if (rs.next()) {
+            conn.close();
             return new User(
                     rs.getInt("id"),
                     rs.getString("name"),
@@ -52,7 +54,10 @@ public class UserRepository implements CrudRepository<User>{
                     rs.getString("profile_pic"),
                     rs.getString("reg_date"));
         }
-        else return null;
+        else {
+            conn.close();
+            return null;
+        }
     }
 
     public User findUserByName(String name) throws SQLException, ClassNotFoundException {
@@ -63,6 +68,7 @@ public class UserRepository implements CrudRepository<User>{
         statement.setString(1, name);
         ResultSet rs = statement.executeQuery();
         if (rs.next()) {
+            conn.close();
             return new User(
                     rs.getInt("id"),
                     rs.getString("name"),
@@ -72,7 +78,10 @@ public class UserRepository implements CrudRepository<User>{
                     rs.getString("profile_pic"),
                     rs.getString("reg_date"));
         }
-        else return null;
+        else {
+            conn.close();
+            return null;
+        }
     }
 
     public User validateUser(String email, String pass) throws SQLException, ClassNotFoundException {
@@ -85,6 +94,7 @@ public class UserRepository implements CrudRepository<User>{
         statement.setString(2, pass);
         ResultSet rs = statement.executeQuery();
         if (rs.next()) {
+            conn.close();
             return new User(
                     rs.getInt("id"),
                     rs.getString("name"),
@@ -94,7 +104,10 @@ public class UserRepository implements CrudRepository<User>{
                     rs.getString("profile_pic"),
                     rs.getString("reg_date"));
         }
-        else return null;
+        else {
+            conn.close();
+            return null;
+        }
     }
 
     @Override
@@ -120,6 +133,7 @@ public class UserRepository implements CrudRepository<User>{
                     rs.getString("profile_pic"),
                     null));
         }
+        conn.close();
         return result;
     }
 
@@ -159,6 +173,30 @@ public class UserRepository implements CrudRepository<User>{
             statement.setInt(2, model.getId());
             statement.executeUpdate();
         }
+        conn.close();
+    }
 
+    public User findUserByEmail(String email) throws ClassNotFoundException, SQLException {
+        Class.forName("org.postgresql.Driver");
+        DbConnection conn = new DbConnection("jdbc:postgresql://localhost:5432/db_project", "baddie",
+                "g0yi8o1s");
+        PreparedStatement statement = conn.getConn().prepareStatement("SELECT * FROM user_table WHERE email = ?");
+        statement.setString(1, email);
+        ResultSet rs = statement.executeQuery();
+        if (rs.next()) {
+            conn.close();
+            return new User(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("lastname"),
+                    rs.getString("email"),
+                    rs.getString("password"),
+                    rs.getString("profile_pic"),
+                    rs.getString("reg_date"));
+        }
+        else {
+            conn.close();
+            return null;
+        }
     }
 }

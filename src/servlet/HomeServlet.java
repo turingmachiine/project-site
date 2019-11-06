@@ -22,14 +22,13 @@ public class HomeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         FreeMarkerConfigurator.getInstance(this);
         HttpSession session = req.getSession();
-        resp.setCharacterEncoding("utf-8");
         User user = (User) session.getAttribute("current_user");
         Cookie[] cookies = req.getCookies();
         Map<String, Object> root = new HashMap<>();
         if (user == null && cookies != null) {
             for (Cookie cookie: cookies) {
                 try {
-                    user = new UserRepository().validateUser(cookie.getName(), cookie.getValue());
+                    user = new UserRepository().findUserByEmail(cookie.getValue());
                     if (user != null) {
                         break;
                     }
@@ -41,13 +40,11 @@ public class HomeServlet extends HttpServlet {
         if (user != null) {
             root.put("user", user);
         }
-        root.put("context", req.getContextPath());
         try {
             root.put("topPosts", new PostRepository().findAll());
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        resp.setCharacterEncoding("utf-8");
         Render.render(req, resp, "home.ftl", root);
     }
 }

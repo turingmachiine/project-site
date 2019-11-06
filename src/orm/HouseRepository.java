@@ -16,19 +16,51 @@ public class HouseRepository implements CrudRepository<House> {
 
     }
 
-    public ArrayList<String> getAllImages(House model) throws ClassNotFoundException, SQLException {
-        ArrayList<String> res = new ArrayList<>();
+    public ArrayList<House> findHousesByUser(int id) throws SQLException, ClassNotFoundException {
         ArrayList<House> result = new ArrayList<>();
         Class.forName("org.postgresql.Driver");
         DbConnection conn = new DbConnection("jdbc:postgresql://localhost:5432/db_project", "baddie",
                 "g0yi8o1s");
-        PreparedStatement statement = conn.getConn().prepareStatement("SELECT image FROM house_images WHERE house = ?");
-        statement.setInt(1, model.getId());
+        PreparedStatement statement = conn.getConn().prepareStatement("SELECT * FROM old_house_table WHERE creator = ?");
+        statement.setInt(1, id);
         ResultSet rs = statement.executeQuery();
-        while (rs.next()) {
-            res.add(rs.getString("image"));
+        while(rs.next()) {
+            result.add(new House(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    new UserRepository().findByID(id),
+                    rs.getString("cre_date"),
+                    new HouseClassRepository().findByID(rs.getInt("class_ref")),
+                    rs.getString("description"),
+                    new LocationRepository().findByID(rs.getInt("location")),
+                    rs.getString("image")));
         }
-        return res;
+        conn.close();
+        return result;
+    }
+
+    public ArrayList<House> findOtherHousesByUser(int userId, int houseId) throws SQLException, ClassNotFoundException {
+        ArrayList<House> result = new ArrayList<>();
+        Class.forName("org.postgresql.Driver");
+        DbConnection conn = new DbConnection("jdbc:postgresql://localhost:5432/db_project", "baddie",
+                "g0yi8o1s");
+        PreparedStatement statement = conn.getConn().prepareStatement("SELECT * FROM old_house_table WHERE creator = ? AND id != ?");
+        statement.setInt(1, userId);
+        statement.setInt(2, houseId);
+        ResultSet rs = statement.executeQuery();
+        while(rs.next()) {
+            result.add(new House(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    new UserRepository().findByID(userId),
+                    rs.getString("cre_date"),
+                    new HouseClassRepository().findByID(rs.getInt("class_ref")),
+                    rs.getString("description"),
+                    new LocationRepository().findByID(rs.getInt("location")),
+                    rs.getString("image")));
+        }
+        conn.close();
+        return result;
     }
 
     public House findByName(String name) throws SQLException, ClassNotFoundException {
@@ -39,6 +71,7 @@ public class HouseRepository implements CrudRepository<House> {
         statement.setString(1,name);
         ResultSet rs = statement.executeQuery();
         if (rs.next()) {
+            conn.close();
             return new House(
                     rs.getInt("id"),
                     rs.getString("name"),
@@ -46,10 +79,13 @@ public class HouseRepository implements CrudRepository<House> {
                     rs.getString("cre_date"),
                     new HouseClassRepository().findByID(rs.getInt("class_ref")),
                     rs.getString("description"),
-                    new LocationRepository().findByID(rs.getInt("location")));
+                    new LocationRepository().findByID(rs.getInt("location")),
+                    rs.getString("image"));
         }
-        else return null;
-
+        else {
+            conn.close();
+            return null;
+        }
     }
     @Override
     public void create(House model) throws ClassNotFoundException, SQLException {
@@ -57,15 +93,16 @@ public class HouseRepository implements CrudRepository<House> {
         DbConnection conn = new DbConnection("jdbc:postgresql://localhost:5432/db_project", "baddie",
                 "g0yi8o1s");
         PreparedStatement statement = conn.getConn().prepareStatement("INSERT INTO old_house_table VALUES " +
-                "(DEFAULT, ?, ?, ?, ?, ?, ?)");
+                "(DEFAULT, ?, ?, ?, ?, ?, ?, ?)");
         statement.setString(1,model.getName());
         statement.setInt(2, model.getCreator().getId());
         statement.setString(3,model.getCreationDate());
         statement.setInt(4, model.getHouseClass().getId());
         statement.setString(5, model.getDescription());
         statement.setInt(6, model.getLocation().getId());
+        statement.setString(7, model.getImage());
         statement.executeUpdate();
-
+        conn.close();
     }
 
     @Override
@@ -77,6 +114,7 @@ public class HouseRepository implements CrudRepository<House> {
         statement.setInt(1,id);
         ResultSet rs = statement.executeQuery();
         if (rs.next()) {
+            conn.close();
             return new House(
                     rs.getInt("id"),
                     rs.getString("name"),
@@ -84,9 +122,13 @@ public class HouseRepository implements CrudRepository<House> {
                     rs.getString("cre_date"),
                     new HouseClassRepository().findByID(rs.getInt("class_ref")),
                     rs.getString("description"),
-                    new LocationRepository().findByID(rs.getInt("location")));
+                    new LocationRepository().findByID(rs.getInt("location")),
+                    rs.getString("image"));
         }
-        else return null;
+        else {
+            conn.close();
+            return null;
+        }
 
     }
 
@@ -111,8 +153,10 @@ public class HouseRepository implements CrudRepository<House> {
                     rs.getString("cre_date"),
                     new HouseClassRepository().findByID(rs.getInt("class_ref")),
                     rs.getString("description"),
-                    new LocationRepository().findByID(rs.getInt("location"))));
+                    new LocationRepository().findByID(rs.getInt("location")),
+                    rs.getString("image")));
         }
+        conn.close();
         return result;
     }
 
@@ -121,4 +165,26 @@ public class HouseRepository implements CrudRepository<House> {
 
     }
 
+    public ArrayList<House> findByNameLike(String name) throws ClassNotFoundException, SQLException {
+        ArrayList<House> result = new ArrayList<>();
+        Class.forName("org.postgresql.Driver");
+        DbConnection conn = new DbConnection("jdbc:postgresql://localhost:5432/db_project", "baddie",
+                "g0yi8o1s");
+        PreparedStatement statement = conn.getConn().prepareStatement("SELECT * FROM old_house_table WHERE name like ?");
+        statement.setString(1, "%" + name + "%");
+        ResultSet rs = statement.executeQuery();
+        while(rs.next()) {
+            result.add(new House(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    new UserRepository().findByID(rs.getInt("creator")),
+                    rs.getString("cre_date"),
+                    new HouseClassRepository().findByID(rs.getInt("class_ref")),
+                    rs.getString("description"),
+                    new LocationRepository().findByID(rs.getInt("location")),
+                    rs.getString("image")));
+        }
+        conn.close();
+        return result;
+    }
 }

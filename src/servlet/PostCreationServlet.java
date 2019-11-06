@@ -35,9 +35,12 @@ public class PostCreationServlet extends HttpServlet {
         if (usr != null) {
             FreeMarkerConfigurator.getInstance(this);
             Map<String, Object> root = new HashMap<>();
-            root.put("context", req.getContextPath());
             root.put("user", usr);
-            ArrayList<String> names = new ArrayList<>();
+            try {
+                root.put("houses", new HouseRepository().findAll());
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             Render.render(req, resp, "create_post.ftl", root);
         } else {
             resp.sendRedirect("/login");
@@ -46,15 +49,17 @@ public class PostCreationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
         HttpSession session = req.getSession();
         User usr = (User) session.getAttribute("current_user");
+        resp.setCharacterEncoding("utf-8");
         if (usr != null) {
             try {
                 Part filePart = req.getPart("file"); // Retrieves <input type="file" name="file">
                 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+                DateFormat format = new SimpleDateFormat("dd MMMM yyyy HH:mm");
+                String date = format.format(Calendar.getInstance().getTime());
                 if (fileName.equals("")) {
-                    DateFormat format = new SimpleDateFormat("dd/mm/yyyy");
-                    String date = format.format(Calendar.getInstance().getTime());
                     new PostRepository().create(new Post(
                             0,
                             req.getParameter("title"),
@@ -70,8 +75,6 @@ public class PostCreationServlet extends HttpServlet {
                     File file = File.createTempFile("img", "." + filenames[1], uploads);
                     Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
                     String need_path = "/resources/images/" + file.getPath().split("/")[10];
-                    DateFormat format = new SimpleDateFormat("dd/mm/yyyy");
-                    String date = format.format(new Date(System.currentTimeMillis()));
                     new PostRepository().create(new Post(
                             0,
                             req.getParameter("title"),

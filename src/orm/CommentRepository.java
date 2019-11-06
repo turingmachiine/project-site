@@ -21,13 +21,15 @@ public class CommentRepository implements CrudRepository<Comment> {
         DbConnection conn = new DbConnection("jdbc:postgresql://localhost:5432/db_project", "baddie",
                 "g0yi8o1s");
         PreparedStatement statement = conn.getConn().prepareStatement("INSERT INTO comment_table VALUES " +
-                "(DEFAULT, ?, NULL, ?, ?, ?, ?)");
+                "(DEFAULT, ?, ?, ?, ?, ?, ?)");
         statement.setString(1,model.getCommentText());
-        statement.setInt(2, model.getUpvotes());
-        statement.setInt(3, model.getDownvotes());
-        statement.setInt(4, model.getUser().getId());
-        statement.setInt(5, model.getPost().getId());
+        statement.setString(2, model.getCommentDate());
+        statement.setInt(3, model.getUpvotes());
+        statement.setInt(4, model.getDownvotes());
+        statement.setInt(5, model.getUser().getId());
+        statement.setInt(6, model.getPost().getId());
         statement.executeUpdate();
+        conn.close();
     }
 
     @Override
@@ -39,16 +41,19 @@ public class CommentRepository implements CrudRepository<Comment> {
         statement.setInt(1,id);
         ResultSet rs = statement.executeQuery();
         if (rs.next()) {
+            conn.close();
             return new Comment(
                     rs.getInt("id"),
                     rs.getString("comment_text"),
-                    null,
+                    rs.getString("comment_date"),
                     rs.getInt("upvotes"),
                     rs.getInt("downvotes"),
                     new UserRepository().findByID(rs.getInt("user_ref")),
                     new PostRepository().findByID(rs.getInt("post_ref")));
+        } else {
+            conn.close();
+            return null;
         }
-        else return null;
     }
 
     @Override
@@ -68,17 +73,40 @@ public class CommentRepository implements CrudRepository<Comment> {
             result.add(new Comment(
                     rs.getInt("id"),
                     rs.getString("comment_text"),
-                    null,
+                    rs.getString("comment_date"),
                     rs.getInt("upvotes"),
                     rs.getInt("downvotes"),
                     new UserRepository().findByID(rs.getInt("user_ref")),
                     new PostRepository().findByID(rs.getInt("post_ref"))));
         }
+        conn.close();
         return result;
     }
 
     @Override
     public void update(Comment model) {
 
+    }
+
+    public ArrayList<Comment> getFromPost(int id) throws ClassNotFoundException, SQLException {
+        ArrayList<Comment> result = new ArrayList<>();
+        Class.forName("org.postgresql.Driver");
+        DbConnection conn = new DbConnection("jdbc:postgresql://localhost:5432/db_project", "baddie",
+                "g0yi8o1s");
+        PreparedStatement statement = conn.getConn().prepareStatement("SELECT * FROM comment_table WHERE post_ref = ?");
+        statement.setInt(1, id);
+        ResultSet rs = statement.executeQuery();
+        while(rs.next()) {
+            result.add(new Comment(
+                    rs.getInt("id"),
+                    rs.getString("comment_text"),
+                    rs.getString("comment_date"),
+                    rs.getInt("upvotes"),
+                    rs.getInt("downvotes"),
+                    new UserRepository().findByID(rs.getInt("user_ref")),
+                    new PostRepository().findByID(rs.getInt("post_ref"))));
+        }
+        conn.close();
+        return result;
     }
 }

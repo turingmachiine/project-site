@@ -5,6 +5,8 @@ import help.Render;
 import model.User;
 import orm.UserRepository;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +17,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.KeySpec;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -38,7 +43,7 @@ public class RegistrationServlet extends HttpServlet {
         if (user == null && cookies != null) {
             for (Cookie cookie: cookies) {
                 try {
-                    user = new UserRepository().validateUser(cookie.getName(), cookie.getValue());
+                    user = new UserRepository().findUserByEmail(cookie.getValue());
                     if (user != null) {
                         break;
                     }
@@ -58,11 +63,21 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("current_user");
-        DateFormat format = new SimpleDateFormat("dd/mm/yyyy");
+        DateFormat format = new SimpleDateFormat("dd MMMM yyyy HH:mm");
         String date = format.format(Calendar.getInstance().getTime());
-
+        SecureRandom random = new SecureRandom();
+        byte[]salt = new byte[16];
+        random.nextBytes(salt);
+        KeySpec spec = new PBEKeySpec(req.getParameter("password").toCharArray(), salt, 65536, 128);
+        try {
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        
         if (user != null) {
             resp.sendRedirect("/profile");
         } else {

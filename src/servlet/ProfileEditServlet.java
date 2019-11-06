@@ -45,9 +45,10 @@ public class ProfileEditServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
         HttpSession session = req.getSession();
         User usr = (User) session.getAttribute("current_user");
-        DateFormat format = new SimpleDateFormat("dd/mm/yyyy");
+        DateFormat format = new SimpleDateFormat("dd MMMM yyyy hh:mm");
         String date = format.format(Calendar.getInstance().getTime());
         if (usr != null) {
             Part filePart = req.getPart("file"); // Retrieves <input type="file" name="file">

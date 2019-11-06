@@ -16,6 +16,40 @@ public class PostRepository implements CrudRepository<Post> {
 
     }
 
+    public ArrayList<Post> findOtherPostsAboutHouse(int houseiId, int postId) throws SQLException, ClassNotFoundException {
+        ArrayList<Post> result = new ArrayList<>();
+        Class.forName("org.postgresql.Driver");
+        DbConnection conn = new DbConnection("jdbc:postgresql://localhost:5432/db_project", "baddie",
+                "g0yi8o1s");
+        PreparedStatement statement = conn.getConn().prepareStatement("SELECT * FROM post_table WHERE house_ref = ? AND id != ?");
+        statement.setInt(1, houseiId);
+        statement.setInt(2, postId);
+        ResultSet rs = statement.executeQuery();
+        while(rs.next()) {
+            result.add(findByID(rs.getInt("id")));
+        }
+        conn.close();
+        return result;
+    }
+
+    public ArrayList<Post> getPostWithUserComments(int id) throws ClassNotFoundException, SQLException {
+        ArrayList<Post> result = new ArrayList<>();
+        Class.forName("org.postgresql.Driver");
+        DbConnection conn = new DbConnection("jdbc:postgresql://localhost:5432/db_project", "baddie",
+                "g0yi8o1s");
+        PreparedStatement statement = conn.getConn().prepareStatement("WITH first as (\n" +
+                "    SELECT * FROM comment_table WHERE user_ref = ? \n" +
+                ")\n" +
+                "SELECT DISTINCT post_table.id FROM post_table INNER JOIN first on first.post_ref = post_table.id");
+        statement.setInt(1, id);
+        ResultSet rs = statement.executeQuery();
+        while (rs.next()) {
+            result.add(findByID(rs.getInt("id")));
+        }
+        conn.close();
+        return result;
+    }
+
     public Post findByName(String name) throws SQLException, ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
         DbConnection conn = new DbConnection("jdbc:postgresql://localhost:5432/db_project", "baddie",
@@ -24,6 +58,7 @@ public class PostRepository implements CrudRepository<Post> {
         statement.setString(1,name);
         ResultSet rs = statement.executeQuery();
         if (rs.next()) {
+            conn.close();
             return new Post(
                     rs.getInt("id"),
                     rs.getString("title"),
@@ -33,7 +68,10 @@ public class PostRepository implements CrudRepository<Post> {
                     new UserRepository().findByID(rs.getInt("author")),
                     rs.getString("image"));
         }
-        else return null;
+        else {
+            conn.close();
+            return null;
+        }
     }
 
 
@@ -55,6 +93,7 @@ public class PostRepository implements CrudRepository<Post> {
         statement.setInt(5, model.getAuthor().getId());
         statement.setString(6, model.getImage());
         statement.executeUpdate();
+        conn.close();
     }
 
     @Override
@@ -66,6 +105,7 @@ public class PostRepository implements CrudRepository<Post> {
         statement.setInt(1,id);
         ResultSet rs = statement.executeQuery();
         if (rs.next()) {
+            conn.close();
             return new Post(
                     rs.getInt("id"),
                     rs.getString("title"),
@@ -75,7 +115,10 @@ public class PostRepository implements CrudRepository<Post> {
                     new UserRepository().findByID(rs.getInt("author")),
                     rs.getString("image"));
         }
-        else return null;
+        else {
+            conn.close();
+            return null;
+        }
 
     }
 
@@ -102,6 +145,7 @@ public class PostRepository implements CrudRepository<Post> {
                     new UserRepository().findByID(rs.getInt("author")),
                     rs.getString("image")));
         }
+        conn.close();
         return result;
     }
 

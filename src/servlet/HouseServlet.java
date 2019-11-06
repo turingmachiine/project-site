@@ -33,7 +33,10 @@ public class HouseServlet extends HttpServlet {
         root.put("context", req.getContextPath());
         if (req.getParameter("id") != null){
             try {
-                root.put("house", new HouseRepository().findByID(Integer.parseInt(req.getParameter("id"))));
+                House temp = new HouseRepository().findByID(Integer.parseInt(req.getParameter("id")));
+                root.put("house", temp);
+                root.put("otherHouses", new HouseRepository().findOtherHousesByUser(temp.getCreator().getId(),
+                        Integer.parseInt(req.getParameter("id"))));
             } catch (SQLException | ClassNotFoundException e) {
                 System.out.println("e.printStackTrace();");
             }

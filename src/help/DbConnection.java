@@ -16,4 +16,12 @@ public class DbConnection {
     public DbConnection(String url, String user, String password) throws SQLException {
         this.conn = DriverManager.getConnection(url, user, password);
     }
+
+    public void close() {
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("e.printStackTrace();");
+        }
+    }
 }

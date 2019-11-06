@@ -2,7 +2,9 @@ package servlet;
 
 import help.FreeMarkerConfigurator;
 import help.Render;
+import model.Post;
 import model.User;
+import orm.CommentRepository;
 import orm.PostRepository;
 
 import javax.servlet.ServletException;
@@ -30,7 +32,14 @@ public class PostServlet extends HttpServlet {
         root.put("context", req.getContextPath());
         if (req.getParameter("id") != null){
             try {
-                root.put("post", new PostRepository().findByID(Integer.parseInt(req.getParameter("id"))));
+                Post temp = new PostRepository().findByID(Integer.parseInt(req.getParameter("id")));
+                root.put("post", temp);
+                root.put("comments", new CommentRepository().getFromPost(Integer.parseInt(req.getParameter("id"))));
+                if (temp.getHouseReference() != null) {
+                    root.put("otherPosts", new PostRepository().findOtherPostsAboutHouse(
+                            temp.getHouseReference().getId(),
+                            Integer.parseInt(req.getParameter("id"))));
+                }
             } catch (SQLException | ClassNotFoundException e) {
                 System.out.println("e.printStackTrace();");
             }

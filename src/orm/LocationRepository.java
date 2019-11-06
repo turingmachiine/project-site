@@ -26,6 +26,7 @@ public class LocationRepository implements CrudRepository<Location> {
         statement.setFloat(2, model.getLongitude());
         statement.setString(3, model.getCity());
         statement.executeUpdate();
+        conn.close();
     }
 
     public Location findByCoordinats(float latitude, float longitude) throws SQLException, ClassNotFoundException {
@@ -37,13 +38,17 @@ public class LocationRepository implements CrudRepository<Location> {
         statement.setFloat(2, longitude);
         ResultSet rs = statement.executeQuery();
         if (rs.next()) {
+            conn.close();
             return new Location(
                     rs.getInt("id"),
                     rs.getFloat("latitude"),
                     rs.getFloat("longitude"),
                     rs.getString("city"));
         }
-        else return null;
+        else {
+            conn.close();
+            return null;
+        }
 
     }
 
@@ -56,13 +61,17 @@ public class LocationRepository implements CrudRepository<Location> {
         statement.setInt(1,id);
         ResultSet rs = statement.executeQuery();
         if (rs.next()) {
+            conn.close();
             return new Location(
                     rs.getInt("id"),
                     rs.getFloat("latitude"),
                     rs.getFloat("longitude"),
                     rs.getString("city"));
         }
-        else return null;
+        else {
+            conn.close();
+            return null;
+        }
 
     }
 
@@ -86,6 +95,7 @@ public class LocationRepository implements CrudRepository<Location> {
                     rs.getFloat("longitude"),
                     rs.getString("city")));
         }
+        conn.close();
         return result;
     }
 

@@ -10,6 +10,7 @@ public class House {
     HouseClass houseClass;
     String description;
     Location location;
+    String image;
 
     public void setId(int id) {
         this.id = id;
@@ -72,7 +73,7 @@ public class House {
                 '}';
     }
 
-    public House(int id, String name, User creator, String creationDate, HouseClass houseClass, String description, Location location) {
+    public House(int id, String name, User creator, String creationDate, HouseClass houseClass, String description, Location location, String image) {
         this.id = id;
         this.name = name;
         this.creator = creator;
@@ -80,6 +81,15 @@ public class House {
         this.houseClass = houseClass;
         this.description = description;
         this.location = location;
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getCreationDate() {
