@@ -32,6 +32,21 @@ public class PostRepository implements CrudRepository<Post> {
         return result;
     }
 
+    public ArrayList<Post> findPostsAboutHouse(int houseiId) throws ClassNotFoundException, SQLException {
+        ArrayList<Post> result = new ArrayList<>();
+        Class.forName("org.postgresql.Driver");
+        DbConnection conn = new DbConnection("jdbc:postgresql://localhost:5432/db_project", "baddie",
+                "g0yi8o1s");
+        PreparedStatement statement = conn.getConn().prepareStatement("SELECT * FROM post_table WHERE house_ref = ?");
+        statement.setInt(1, houseiId);
+        ResultSet rs = statement.executeQuery();
+        while(rs.next()) {
+            result.add(findByID(rs.getInt("id")));
+        }
+        conn.close();
+        return result;
+    }
+
     public ArrayList<Post> getPostWithUserComments(int id) throws ClassNotFoundException, SQLException {
         ArrayList<Post> result = new ArrayList<>();
         Class.forName("org.postgresql.Driver");

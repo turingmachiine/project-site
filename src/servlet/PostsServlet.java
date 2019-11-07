@@ -27,9 +27,13 @@ public class PostsServlet extends HttpServlet {
         if (user != null) {
             root.put("user", user);
         }
-        root.put("context", req.getContextPath());
+        int id = req.getParameter("house_id") != null? Integer.parseInt(req.getParameter("house_id")) : -1;
         try {
-            root.put("posts", new PostRepository().findAll());
+            if (id == -1) {
+                root.put("posts", new PostRepository().findAll());
+            } else {
+                root.put("posts", new PostRepository().findPostsAboutHouse(id));
+            }
             root.put("houses", new HouseRepository().findAll());
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
