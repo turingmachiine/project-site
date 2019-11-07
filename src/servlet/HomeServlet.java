@@ -23,23 +23,8 @@ public class HomeServlet extends HttpServlet {
         FreeMarkerConfigurator.getInstance(this);
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("current_user");
-        Cookie[] cookies = req.getCookies();
         Map<String, Object> root = new HashMap<>();
-        if (user == null && cookies != null) {
-            for (Cookie cookie: cookies) {
-                try {
-                    user = new UserRepository().findUserByEmail(cookie.getValue());
-                    if (user != null) {
-                        break;
-                    }
-                } catch (SQLException | ClassNotFoundException e) {
-                    System.out.println("500");
-                }
-            }
-        }
-        if (user != null) {
-            root.put("user", user);
-        }
+        root.put("user", user);
         try {
             root.put("topPosts", new PostRepository().findAll());
         } catch (SQLException | ClassNotFoundException e) {

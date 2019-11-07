@@ -29,30 +29,7 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         FreeMarkerConfigurator.getInstance(this);
         Map<String, Object> root = new HashMap<>();
-        root.put("context", req.getContextPath());
-        HttpSession session = req.getSession();
-        resp.setCharacterEncoding("utf-8");
-        User user = (User) session.getAttribute("current_user");
-        Cookie[] cookies = req.getCookies();
-        if (user == null && cookies != null) {
-            for (Cookie cookie: cookies) {
-                try {
-                    user = new UserRepository().findUserByEmail(cookie.getValue());
-                    if (user != null) {
-                        break;
-                    }
-                } catch (SQLException | ClassNotFoundException e) {
-                    System.out.println("500");
-                }
-            }
-        }
-        if (user != null) {
-            session.setAttribute("current_user", user);
-            resp.sendRedirect("/profile");
-        } else {
-            Render.render(req, resp, "login.ftl", root);
-
-        }
+        Render.render(req, resp, "login.ftl", root);
     }
 
     @Override
@@ -62,25 +39,21 @@ public class LoginServlet extends HttpServlet {
         String email = req.getParameter("login");
         String password = req.getParameter("password");
         User user = (User) session.getAttribute("current_user");
-        if (user != null) {
-            resp.sendRedirect("/profile");
-        } else {
-            try {
-                User usr = new UserRepository().validateUser(email, password);
-                if (usr != null) {
-                    if (req.getParameter("rememberme") != null) {
-                        Cookie cookie = new Cookie("email", email);
-                        cookie.setMaxAge(60 * 60);
-                        cookie.setPath("/");
-                        resp.addCookie(cookie);
-                    }
-                    session.setAttribute("current_user", usr);
-                    resp.sendRedirect("/profile");
+        try {
+            User usr = new UserRepository().validateUser(email, password);
+            if (usr != null) {
+                if (req.getParameter("rememberme") != null) {
+                    Cookie cookie = new Cookie("email", email);
+                    cookie.setMaxAge(60 * 60);
+                    cookie.setPath("/");
+                    resp.addCookie(cookie);
+                }
+                session.setAttribute("current_user", usr);
+                resp.sendRedirect("/profile");
 
-                } else resp.sendRedirect("/login");
-            } catch (SQLException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            } else resp.sendRedirect("/login");
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

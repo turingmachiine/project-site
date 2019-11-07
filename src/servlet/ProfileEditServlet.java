@@ -31,15 +31,11 @@ public class ProfileEditServlet extends HttpServlet {
         HttpSession session = req.getSession();
         User usr = (User) session.getAttribute("current_user");
         resp.setCharacterEncoding("utf-8");
-        if (usr != null) {
-            FreeMarkerConfigurator.getInstance(this);
-            Map<String, Object> root = new HashMap<>();
-            root.put("context", req.getContextPath());
-            root.put("user", usr);
-            Render.render(req, resp, "edit.ftl", root);
-        } else {
-            resp.sendRedirect("/login");
-        }
+        FreeMarkerConfigurator.getInstance(this);
+        Map<String, Object> root = new HashMap<>();
+        root.put("user", usr);
+        Render.render(req, resp, "edit.ftl", root);
+
 
     }
 

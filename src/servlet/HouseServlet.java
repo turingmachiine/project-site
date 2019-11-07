@@ -30,7 +30,6 @@ public class HouseServlet extends HttpServlet {
         if (user != null) {
             root.put("user", user);
         }
-        root.put("context", req.getContextPath());
         if (req.getParameter("id") != null){
             try {
                 House temp = new HouseRepository().findByID(Integer.parseInt(req.getParameter("id")));

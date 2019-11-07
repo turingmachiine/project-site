@@ -26,7 +26,6 @@ public class HousesServlet extends HttpServlet {
         if (user != null) {
             root.put("user", user);
         }
-        root.put("context", req.getContextPath());
         try {
             root.put("houses", new HouseRepository().findAll());
         } catch (SQLException | ClassNotFoundException e) {

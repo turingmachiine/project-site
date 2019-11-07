@@ -29,7 +29,6 @@ public class PostServlet extends HttpServlet {
         if (user != null) {
             root.put("user", user);
         }
-        root.put("context", req.getContextPath());
         if (req.getParameter("id") != null){
             try {
                 Post temp = new PostRepository().findByID(Integer.parseInt(req.getParameter("id")));

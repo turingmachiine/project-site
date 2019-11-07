@@ -32,19 +32,16 @@ public class PostCreationServlet extends HttpServlet {
         HttpSession session = req.getSession();
         User usr = (User) session.getAttribute("current_user");
         resp.setCharacterEncoding("utf-8");
-        if (usr != null) {
-            FreeMarkerConfigurator.getInstance(this);
-            Map<String, Object> root = new HashMap<>();
-            root.put("user", usr);
-            try {
-                root.put("houses", new HouseRepository().findAll());
-            } catch (SQLException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            Render.render(req, resp, "create_post.ftl", root);
-        } else {
-            resp.sendRedirect("/login");
+        FreeMarkerConfigurator.getInstance(this);
+        Map<String, Object> root = new HashMap<>();
+        root.put("user", usr);
+        try {
+            root.put("houses", new HouseRepository().findAll());
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
+        Render.render(req, resp, "create_post.ftl", root);
+
     }
 
     @Override

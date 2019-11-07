@@ -23,22 +23,19 @@ public class ProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         User usr = (User) session.getAttribute("current_user");
-        if (usr != null) {
-            FreeMarkerConfigurator.getInstance(this);
-            Map<String, Object> root = new HashMap<>();
-            resp.setCharacterEncoding("utf-8");
-            root.put("context", req.getContextPath());
-            root.put("user", usr);
-            try {
-                root.put("posts",new PostRepository().getPostWithUserComments(usr.getId()));
-                root.put("houses", new HouseRepository().findHousesByUser(usr.getId()));
-            } catch (ClassNotFoundException | SQLException e) {
-                System.out.println("500");
-            }
-            Render.render(req, resp, "profile.ftl", root);
-        } else {
-            resp.sendRedirect("/login");
+        FreeMarkerConfigurator.getInstance(this);
+        Map<String, Object> root = new HashMap<>();
+        resp.setCharacterEncoding("utf-8");
+        root.put("context", req.getContextPath());
+        root.put("user", usr);
+        try {
+            root.put("posts",new PostRepository().getPostWithUserComments(usr.getId()));
+            root.put("houses", new HouseRepository().findHousesByUser(usr.getId()));
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("500");
         }
+        Render.render(req, resp, "profile.ftl", root);
+
 
     }
 
