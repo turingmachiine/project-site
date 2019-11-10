@@ -19,9 +19,12 @@ import javax.servlet.http.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static help.HashGenerator.generateHash;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -40,7 +43,7 @@ public class LoginServlet extends HttpServlet {
         String password = req.getParameter("password");
         User user = (User) session.getAttribute("current_user");
         try {
-            User usr = new UserRepository().validateUser(email, password);
+            User usr = new UserRepository().validateUser(email, generateHash(password));
             if (usr != null) {
                 if (req.getParameter("rememberme") != null) {
                     Cookie cookie = new Cookie("email", email);
@@ -52,7 +55,7 @@ public class LoginServlet extends HttpServlet {
                 resp.sendRedirect("/profile");
 
             } else resp.sendRedirect("/login");
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
     }

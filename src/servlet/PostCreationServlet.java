@@ -50,49 +50,47 @@ public class PostCreationServlet extends HttpServlet {
         HttpSession session = req.getSession();
         User usr = (User) session.getAttribute("current_user");
         resp.setCharacterEncoding("utf-8");
-        if (usr != null) {
-            try {
-                Part filePart = req.getPart("file"); // Retrieves <input type="file" name="file">
-                String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-                DateFormat format = new SimpleDateFormat("dd MMMM yyyy HH:mm");
-                String date = format.format(Calendar.getInstance().getTime());
-                if (fileName.equals("")) {
-                    new PostRepository().create(new Post(
-                            0,
-                            req.getParameter("title"),
-                            req.getParameter("text"),
-                            date,
-                            new HouseRepository().findByName(req.getParameter("house")),
-                            usr,
-                            null));
-                } else {
-                    String[] filenames = fileName.split("\\.");
-                    InputStream fileContent = filePart.getInputStream();
-                    File uploads = new File("/home/baddie/IdeaProjects/project-site/out/artifacts/project_site_war_exploded/resources/images");
-                    File file = File.createTempFile("img", "." + filenames[1], uploads);
-                    Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    String need_path = "/resources/images/" + file.getPath().split("/")[10];
-                    new PostRepository().create(new Post(
-                            0,
-                            req.getParameter("title"),
-                            req.getParameter("text"),
-                            date,
-                            new HouseRepository().findByName(req.getParameter("house")),
-                            usr,
-                            need_path));
-                }
-            } catch(SQLException | ClassNotFoundException e){
-                    System.out.println("500");
-                }
-                try {
-                    session.setAttribute("id", new PostRepository().findByName(
-                            req.getParameter("title")).getId());
-                } catch (SQLException | ClassNotFoundException e) {
-                    System.out.println("500");
-                }
-                resp.sendRedirect("/post");
+        try {
+            Part filePart = req.getPart("file"); // Retrieves <input type="file" name="file">
+            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            DateFormat format = new SimpleDateFormat("dd MMMM yyyy HH:mm");
+            String date = format.format(Calendar.getInstance().getTime());
+            if (fileName.equals("")) {
+                new PostRepository().create(new Post(
+                        0,
+                        req.getParameter("title"),
+                        req.getParameter("text"),
+                        date,
+                        new HouseRepository().findByName(req.getParameter("house")),
+                        usr,
+                        null));
             } else {
-            resp.sendRedirect("/login");
+                String[] filenames = fileName.split("\\.");
+                InputStream fileContent = filePart.getInputStream();
+                File uploads = new File("/home/baddie/IdeaProjects/project-site/out/artifacts/project_site_war_exploded/resources/images");
+                File file = File.createTempFile("img", "." + filenames[1], uploads);
+                Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                String need_path = "/resources/images/" + file.getPath().split("/")[10];
+                new PostRepository().create(new Post(
+                        0,
+                        req.getParameter("title"),
+                        req.getParameter("text"),
+                        date,
+                        new HouseRepository().findByName(req.getParameter("house")),
+                        usr,
+                        need_path));
+            }
+        } catch(SQLException | ClassNotFoundException e){
+            System.out.println("500");
         }
+        int post_id = -1;
+        try {
+            post_id = new PostRepository().findByName(
+                    req.getParameter("title")).getId();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("500");
+        }
+        resp.sendRedirect("/post?id=" + post_id);
+
     }
 }

@@ -65,10 +65,12 @@ public class ProfileEditServlet extends HttpServlet {
             } else {
                 String[] filenames = fileName.split("\\.");
                 InputStream fileContent = filePart.getInputStream();
-                File uploads = new File("/home/baddie/IdeaProjects/project-site/out/artifacts/project_site_war_exploded/resources/images");
+                String rel_path = "/resources/images/";
+                File uploads = new File(getServletContext().getRealPath("") + rel_path);
                 File file = File.createTempFile("img", "." + filenames[1], uploads);
                 Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                String need_path = "/resources/images/" + file.getPath().split("/")[10];
+                String[] parts = file.getPath().split("/");
+                String need_path = rel_path + parts[parts.length -1];
                 try {
                     new UserRepository().update(new User(
                             usr.getId(),

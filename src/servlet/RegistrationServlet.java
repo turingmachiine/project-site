@@ -28,6 +28,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static help.HashGenerator.generateHash;
+
 @WebServlet("/registration")
 @MultipartConfig
 public class RegistrationServlet extends HttpServlet {
@@ -45,15 +47,6 @@ public class RegistrationServlet extends HttpServlet {
         User user = (User) session.getAttribute("current_user");
         DateFormat format = new SimpleDateFormat("dd MMMM yyyy HH:mm");
         String date = format.format(Calendar.getInstance().getTime());
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        KeySpec spec = new PBEKeySpec(req.getParameter("password").toCharArray(), salt, 65536, 128);
-        try {
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
         Part filePart = req.getPart("file"); // Retrieves <input type="file" name="file">
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
         if (fileName.equals("")) {
@@ -63,31 +56,33 @@ public class RegistrationServlet extends HttpServlet {
                         req.getParameter("first_name"),
                         req.getParameter("last_name"),
                         req.getParameter("email"),
-                        req.getParameter("password"),
+                        generateHash(req.getParameter("password")),
                         null,
                         date
                 ));
-            } catch (ClassNotFoundException | SQLException e) {
+            } catch (ClassNotFoundException | SQLException | NoSuchAlgorithmException e) {
                 System.out.println("e.printStackTrace();");
             }
         } else {
             String[] filenames = fileName.split("\\.");
             InputStream fileContent = filePart.getInputStream();
-            File uploads = new File("/home/baddie/IdeaProjects/project-site/out/artifacts/project_site_war_exploded/resources/images");
+            String rel_path = "/resources/images/";
+            File uploads = new File(getServletContext().getRealPath("") + rel_path);
             File file = File.createTempFile("img", "." + filenames[1], uploads);
             Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            String need_path = "/resources/images/" + file.getPath().split("/")[10];
+            String[] parts = file.getPath().split("/");
+            String need_path = rel_path + parts[parts.length -1];
             try {
                 new UserRepository().create(new User(
                         0,
                         req.getParameter("first_name"),
                         req.getParameter("last_name"),
                         req.getParameter("email"),
-                        req.getParameter("password"),
+                        generateHash(req.getParameter("password")),
                         need_path,
                         date
                 ));
-            } catch (ClassNotFoundException | SQLException e) {
+            } catch (ClassNotFoundException | SQLException | NoSuchAlgorithmException e) {
                 System.out.println("e.printStackTrace();");
             }
         }

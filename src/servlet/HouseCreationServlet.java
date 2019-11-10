@@ -96,12 +96,13 @@ public class HouseCreationServlet extends HttpServlet {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+        int house_id = -1;
         try {
-            session.setAttribute("id", new HouseRepository().findByName(
-                    req.getParameter("house_name")).getId());
+            house_id =  new HouseRepository().findByName(
+                    req.getParameter("house_name")).getId();
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("500");
         }
-        resp.sendRedirect("/house");
+        resp.sendRedirect("/house?id" + house_id);
     }
 }
