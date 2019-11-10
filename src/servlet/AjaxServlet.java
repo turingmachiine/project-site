@@ -5,7 +5,6 @@ import orm.HouseRepository;
 import org.json.JSONObject;
 
 
-
 import org.json.JSONArray;
 
 import javax.servlet.ServletException;
@@ -21,11 +20,13 @@ import java.util.ArrayList;
 public class AjaxServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
         String name = req.getParameter("term");
         try {
             ArrayList<House> houses = new HouseRepository().findByNameLike(name);
             JSONArray array = new JSONArray();
-            for (House house: houses) {
+            for (House house : houses) {
                 array.put(new JSONObject(house));
             }
             JSONObject object = new JSONObject();
