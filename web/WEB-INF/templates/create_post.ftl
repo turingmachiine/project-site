@@ -11,16 +11,16 @@
                     <div class="contact-form-wrap">
                         <form action="/create_post" method="post" enctype="multipart/form-data">
                             <div class="single-contact-form">
-                                <input type="text" name="title" placeholder="Title">
+                                <input type="text" name="title" placeholder="Название">
                             </div>
                             <div class="single-contact-form message">
-                                <textarea name="text" placeholder="Type your post here.."></textarea>
+                                <textarea name="text" placeholder="Напишите ваш пост здесь.."></textarea>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="single-contact-form space-between">
                                         <select class="select-form" name="house">
-                                            <option>None</option>
+                                            <option>Никакой</option>
                                             <#list houses as h>
                                                 <option> ${h.name}</option>
                                             </#list>

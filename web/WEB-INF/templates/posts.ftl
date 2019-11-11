@@ -32,7 +32,7 @@
         							    </ul>
         							    <p>${p.postText}</p>
         							    <div class="blog__btn">
-        								    <a class="shopbtn" href="/post?id=${p.id}">прочитать полностью</a>
+        								    <a class="shopbtn" href="/post?id=${p.id}">открыть</a>
         							    </div>
         						    </div>
         					    </article>

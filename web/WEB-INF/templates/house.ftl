@@ -69,7 +69,7 @@
                                                         <#if house.image?has_content>
                                                             <a class="first__img" href="/house?id=${house.id}"><img src="${house.image}" alt="${house.name}"></a>
                                                         <#else>
-                                                            <a class="first__img" href="/house?id=${house.id}"><img src="/assets/images/blog/blog-3/1.jpg" alt="product images"></a>
+                                                            <a class="first__img" href="/house?id=${house.id}"><img src="/assets/images/blog/blog-3/1.jpg"></a>
                                                         </#if>
                                                     </div>
                                                     <div class="col-8 product__content">
@@ -107,13 +107,6 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-12 md-mt-40 sm-mt-40">
-                    <div class="shop__sidebar">
-                        <aside class="wedget__categories poroduct--cat">
-                            <h3 class="wedget__title">Другая информация</h3>
-                            <ul>
-                            </ul>
-                        </aside>
-                    </div>
                 </div>
             </div>
         </div>

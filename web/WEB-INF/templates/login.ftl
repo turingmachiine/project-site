@@ -13,21 +13,21 @@
                         <form action="/login" method="post">
                             <div class="account__form">
                                 <div class="input__box">
-                                    <label>Username or email address <span>*</span></label>
+                                    <label>Email<span>*</span></label>
                                     <input type="text" name="login">
                                 </div>
                                 <div class="input__box">
-                                    <label>Password</label>
+                                    <label>Пароль<span>*</span></label>
                                     <input id="password" type="password" name="password" oninput="pass_check()">
                                     <label style="color: #bd2130" id="length_error"></label>
                                     <label style="color: #bd2130" id="num_error"></label>
                                     <label style="color: #bd2130" id="letter_error"></label>
                                 </div>
                                 <div class="form__btn">
-                                    <button>Login</button>
+                                    <button>Войти</button>
                                     <label class="label-for-checkbox">
                                         <input id="rememberme" class="input-checkbox" name="rememberme" type="checkbox">
-                                        <span>Remember me</span>
+                                        <span>Запомнить меня</span>
                                     </label>
                                 </div>
                             </div>

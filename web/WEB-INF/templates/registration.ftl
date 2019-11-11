@@ -25,7 +25,7 @@
                                     <input name="email" type="email" >
                                 </div>
                                 <div class="input__box">
-                                    <label>Password</label>
+                                    <label>Пароль<span>*</span></label>
                                     <input id="password" type="password" name="password" oninput="pass_check()">
                                     <label style="color: #bd2130" id="length_error"></label>
                                     <label style="color: #bd2130" id="num_error"></label>

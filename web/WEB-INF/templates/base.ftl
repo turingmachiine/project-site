@@ -164,7 +164,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="copyright">
                                 <div class="copy__right__inner text-left">
-                                    <p>ITIS <i class="fa fa-copyright"></i> <a href="#">Kazan University.</a> Group 11-801, 13B class</p>
+                                    <p>ITIS <i class="fa fa-copyright"></i> <a href="kpfu.ru">Kazan University.</a> Group 11-801, 13B class</p>
                                 </div>
                             </div>
                         </div>

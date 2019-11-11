@@ -10,17 +10,17 @@
                         <h2 class="contact__title">Опубликуйте дом</h2>
                         <form action="/create_house" method="post" enctype="multipart/form-data">
                             <div class="single-contact-form">
-                                <input type="text" name="house_name" placeholder="name of house">
+                                <input type="text" name="house_name" placeholder="Имя дома">
                             </div>
                             <div class="single-contact-form message">
-                                <textarea name="description" placeholder="description"></textarea>
+                                <textarea name="description" placeholder="Описание"></textarea>
                             </div>
                             <div class="row">
                                 <div class ="col-lg-8">
                                     <div class="single-contact-form space-between">
-                                        <input type="text" name="latitude" placeholder="latitude">
+                                        <input type="text" name="latitude" placeholder="Широта">
                                         x
-                                        <input type="text" name="longitude" placeholder="longitude">
+                                        <input type="text" name="longitude" placeholder="Долгота">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -34,7 +34,7 @@
                             <div class="row">
                                 <div class ="col-lg-12">
                                     <div class="single-contact-form space-between">
-                                        <input type="text" name="city" placeholder="city">
+                                        <input type="text" name="city" placeholder="Город">
                                     </div>
                                 </div>
                             </div>
