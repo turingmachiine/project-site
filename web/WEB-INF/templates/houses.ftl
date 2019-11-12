@@ -47,17 +47,23 @@
                                                     <li class="on"><i class="fa fa-star-o"></i></li>
                                                 </ul>
                                             <#elseif h.houseClass.id == 2>
+
+                                            <ul class="rating d-flex">
                                                 <li class="on"><i class="fa fa-star-o"></i></li>
                                                 <li class="on"><i class="fa fa-star-o"></i></li>
                                                 <li class="on"><i class="fa fa-star-o"></i></li>
                                                 <li><i class="fa fa-star-o"></i></li>
                                                 <li><i class="fa fa-star-o"></i></li>
+
+                                            </ul>
                                             <#else>
+                                                <ul class="rating d-flex">
                                                 <li class="on"><i class="fa fa-star-o"></i></li>
                                                 <li><i class="fa fa-star-o"></i></li>
                                                 <li><i class="fa fa-star-o"></i></li>
                                                 <li><i class="fa fa-star-o"></i></li>
                                                 <li><i class="fa fa-star-o"></i></li>
+                                            </ul>
                                             </#if>
                                             <p>${h.description}</p>
                                         </div>
@@ -105,18 +111,21 @@
                                         "<li class=\"on\"><i class=\"fa fa-star-o\"></i></li>\n" +
                                         "</ul>\n");
                                 } else if (msg.objects[i].houseClass.id == 2) {
-                                    $("#resal" + msg.objects[i].id).append("\n" +
+                                    $("#resal" + msg.objects[i].id).append("<ul class=\"rating d-flex\">\n" +
                                         "                                            <li class=\"on\"><i class=\"fa fa-star-o\"></i></li>\n" +
                                         "                                            <li class=\"on\"><i class=\"fa fa-star-o\"></i></li>\n" +
                                         "                                            <li class=\"on\"><i class=\"fa fa-star-o\"></i></li>\n" +
                                         "                                            <li><i class=\"fa fa-star-o\"></i></li>\n" +
-                                        "                                            <li><i class=\"fa fa-star-o\"></i></li>\n");
+                                        "                                            <li><i class=\"fa fa-star-o\"></i></li>\n" +
+                                    "</ul>\n");
                                 } else {
-                                    $("#resal" + msg.objects[i].id).append("<li class=\"on\"><i class=\"fa fa-star-o\"></i></li>\n" +
+                                    $("#resal" + msg.objects[i].id).append("<ul class=\"rating d-flex\">\n" +
+                                        "<li class=\"on\"><i class=\"fa fa-star-o\"></i></li>\n" +
                                         "                                            <li><i class=\"fa fa-star-o\"></i></li>\n" +
                                         "                                            <li><i class=\"fa fa-star-o\"></i></li>\n" +
                                         "                                            <li><i class=\"fa fa-star-o\"></i></li>\n" +
-                                        "                                            <li><i class=\"fa fa-star-o\"></i></li>\n");
+                                        "                                            <li><i class=\"fa fa-star-o\"></i></li>\n" +
+                                        "</ul>\n");
                                 }
                                 $("#resal" + msg.objects[i].id).append("<p>" + msg.objects[i].description + "</p>")
                             }

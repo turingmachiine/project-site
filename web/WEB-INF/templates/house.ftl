@@ -83,17 +83,22 @@
                                                                 <li class="on"><i class="fa fa-star-o"></i></li>
                                                             </ul>
                                                         <#elseif house.houseClass.id == 2>
+
+                                                        <ul class="rating d-flex">
                                                             <li class="on"><i class="fa fa-star-o"></i></li>
                                                             <li class="on"><i class="fa fa-star-o"></i></li>
                                                             <li class="on"><i class="fa fa-star-o"></i></li>
                                                             <li><i class="fa fa-star-o"></i></li>
                                                             <li><i class="fa fa-star-o"></i></li>
-                                                        <#else>
+                                                        </ul>
+                                                            <#else>
+                                                        <ul class="rating d-flex">
                                                             <li class="on"><i class="fa fa-star-o"></i></li>
                                                             <li><i class="fa fa-star-o"></i></li>
                                                             <li><i class="fa fa-star-o"></i></li>
                                                             <li><i class="fa fa-star-o"></i></li>
                                                             <li><i class="fa fa-star-o"></i></li>
+                                                        </ul>
                                                         </#if>
                                                     </div>
                                                 </div>
